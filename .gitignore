@@ -1,0 +1,11 @@
+*.o
+student/*.o
+student/*.d
+student/unit_test
+student/reverse_par
+student/reverse_seq
+test.o
+*.swp
+*.ppm
+a.out
+
