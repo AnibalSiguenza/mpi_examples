@@ -6,6 +6,7 @@ int main(int argc, char** argv){
     int np, rank;
     int N=10;
     int * data;
+    MPI_Status status;
 
     MPI_Init(&argc, &argv);
 
@@ -22,9 +23,15 @@ int main(int argc, char** argv){
     int N_local=N/np;
     int * local_data=calloc(sizeof(int),N_local);
 
-    MPI_Scatter(data, N_local, MPI_INT, local_data, N_local, MPI_INT, 0, MPI_COMM_WORLD);
+    if(rank==0){
+        for(int i=0; i<np; i++){
+            MPI_Send(&data[i*N_local], N_local, MPI_INT, i, 0, MPI_COMM_WORLD);
+        }
+    }
 
-    if(rank==4){
+    MPI_Recv(local_data, N_local, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+
+    if(rank==1){
         for(int i=0; i<N_local; i++){
             printf("%i\n", local_data[i]);
         }
