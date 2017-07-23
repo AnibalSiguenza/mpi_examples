@@ -6,6 +6,7 @@ int main(int argc, char** argv){
     int np, rank;
     int N=10;
     int * data=calloc(sizeof(int), N);
+    MPI_Status status;
 
     MPI_Init(&argc, &argv);
 
@@ -19,17 +20,17 @@ int main(int argc, char** argv){
     }
 
     if(rank==0){
-        for(int i=1; i<N; i++){
+        for(int i=1; i<np; i++){
             MPI_Send(data, N, MPI_INT, i, 0, MPI_COMM_WORLD);
         }
     }
 
     if(rank!=0){
-        MPI_Recv(data, N, MPI_INT, 0, 0, MPI_COMM_WORLD);
-
+        MPI_Recv(data, N, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
 
-    if(rank==1){
+    if(rank==3){
+        printf("from rank %i\n", rank);
         for(int i=0; i<N; i++){
             printf("%i\n", data[i]);
         }
